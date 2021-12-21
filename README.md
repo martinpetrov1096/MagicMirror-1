@@ -39,7 +39,7 @@ active module. If you are using MagicMirror through a browser, mouse support is 
 	},
 ```
 
-## Supporting Buttons in modules
+## Supporting Buttons in Modules
 
 Adding support for buttons to modules is very easy. In the module you just need to define
 an extra function called `onButtonClick` that acts as a hook. It takes just 1 argument that
