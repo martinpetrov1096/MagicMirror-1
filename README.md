@@ -9,43 +9,65 @@
 	<a href="https://github.com/MichMich/MagicMirror/actions?query=workflow%3A%22Automated+Tests%22"><img src="https://github.com/MichMich/MagicMirror/workflows/Automated%20Tests/badge.svg" alt="Tests"></a>
 </p>
 
-**MagicMirror²** is an open source modular smart mirror platform. With a growing list of installable modules, the **MagicMirror²** allows you to convert your hallway or bathroom mirror into your personal assistant. **MagicMirror²** is built by the creator of [the original MagicMirror](https://michaelteeuw.nl/tagged/magicmirror) with the incredible help of a [growing community of contributors](https://github.com/MichMich/MagicMirror/graphs/contributors).
+# Navigation Button Functionality
 
-MagicMirror² focuses on a modular plugin system and uses [Electron](https://www.electronjs.org/) as an application wrapper. So no more web server or browser installs necessary!
+A simple and unified way to interact with your MagicMirror. Navigation consists of 2 buttons
+that allow the user to cyle through their modules, and 4 context buttons named context1,
+context2, context3, and context4 that can change their functionality depending on the currently
+active module. If you are using MagicMirror through a browser, mouse support is also available.
 
-## Documentation
+<img style="border-radius: 10px;" width="100%" src="./demo.gif"/>
 
-For the full documentation including **[installation instructions](https://docs.magicmirror.builders/getting-started/installation.html)**, please visit our dedicated documentation website: [https://docs.magicmirror.builders](https://docs.magicmirror.builders).
+## Configuration
 
-## Links
+```js
+	buttons: {
+		mouseNavigation: true,			// Option to allow using mouse for naviation
+		scrollSensitivity: 6,			// Scrolling sensitivity for mouse navigation (Out of 10)
+		mappings: {						// Mapping names are based on JS event keycodes
+			navigationUp: 'KeyA',		// To select the next module to be active
+			navigationDown: 'KeyS',		// To select the previous module to be active
+			context1: 'KeyQ',			// 1st context key. Typically used as a scroll up
+			context2: 'KeyW',			// 2nd context key. Typically used as a scroll down
+			context3: 'KeyE',			// 3rd context key. Typically used as an enter
+			context4: 'KeyR',			// 4th context key. Typically used as a go back
+		},
+		nonInteractiveModules: [ 		// Don't allow certain modules to be active/selected
+			'alert',
+			'updatenotification'
+		]
+	},
+```
 
-- Website: [https://magicmirror.builders](https://magicmirror.builders)
-- Documentation: [https://docs.magicmirror.builders](https://docs.magicmirror.builders)
-- Forum: [https://forum.magicmirror.builders](https://forum.magicmirror.builders)
-  - Technical discussions: https://forum.magicmirror.builders/category/11/core-system
-- Discord: [https://discord.gg/J5BAtvx](https://discord.gg/J5BAtvx)
-- Blog: [https://michaelteeuw.nl/tagged/magicmirror](https://michaelteeuw.nl/tagged/magicmirror)
-- Donations: [https://magicmirror.builders/#donate](https://magicmirror.builders/#donate)
+## Supporting Buttons in modules
 
-## Contributing Guidelines
+Adding support for buttons to modules is very easy. In the module you just need to define
+an extra function called `onButtonClick` that acts as a hook. It takes just 1 argument that
+would be the name of the button as a string. There are 4 possible names (context1, context2,
+context3, context4). Below is a quick example that I created in the newsfeed module to be
+able to scroll back and forth between stories, and open them in a new tab.
 
-Contributions of all kinds are welcome, not only in the form of code but also with regards to
+```js
+	onButtonClick: function (e) {
+		if (e === "context1") {
+			this.activeItem = Math.min(this.activeItem + 1, this.newsItems.length - 1);
+		} else if (e === "context2") {
+			this.activeItem = Math.max(this.activeItem - 1, 0);
+		} else if (e === "context3") {
+			window.open(this.newsItems[this.activeItem].url, "_blank").focus;
+		}
+		this.updateDom(100);
+	},
+```
 
-- bug reports
-- documentation
-- translations
+## Features
 
-For the full contribution guidelines, check out: [https://docs.magicmirror.builders/getting-started/contributing.html](https://docs.magicmirror.builders/getting-started/contributing.html)
+- Remappable buttons
+- Optional Mouse Support
+- Mouse Scroll Sensitivity
 
-## Enjoying MagicMirror? Consider a donation!
+## Todo
 
-MagicMirror² is opensource and free. That doesn't mean we don't need any money.
-
-Please consider a donation to help us cover the ongoing costs like webservers and email services.
-If we receive enough donations we might even be able to free up some working hours and spend some extra time improving the MagicMirror² core.
-
-To donate, please follow [this](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G5D8E9MR5DTD2&source=url) link.
-
-<p style="text-align: center">
-	<a href="https://forum.magicmirror.builders/topic/728/magicmirror-is-voted-number-1-in-the-magpi-top-50"><img src="https://magicmirror.builders/img/magpi-best-watermark-custom.png" width="150" alt="MagPi Top 50"></a>
-</p>
+- Add button functionality to all built in modules
+- Auto detect modules that have support and whitelist only them
+- Add support for long pressing/double tap
