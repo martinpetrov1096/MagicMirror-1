@@ -21,22 +21,22 @@ active module. If you are using MagicMirror through a browser, mouse support is 
 ## Configuration
 
 ```js
-	buttons: {
-		mouseNavigation: true,			// Option to allow using mouse for naviation
-		scrollSensitivity: 6,			// Scrolling sensitivity for mouse navigation (Out of 10)
-		mappings: {						// Mapping names are based on JS event keycodes
-			navigationUp: 'KeyA',		// To select the next module to be active
-			navigationDown: 'KeyS',		// To select the previous module to be active
-			context1: 'KeyQ',			// 1st context key. Typically used as a scroll up
-			context2: 'KeyW',			// 2nd context key. Typically used as a scroll down
-			context3: 'KeyE',			// 3rd context key. Typically used as an enter
-			context4: 'KeyR',			// 4th context key. Typically used as a go back
-		},
-		nonInteractiveModules: [ 		// Don't allow certain modules to be active/selected
-			'alert',
-			'updatenotification'
-		]
-	},
+buttons: {
+  mouseNavigation: true,			// Option to allow using mouse for naviation
+  scrollSensitivity: 6,			// Scrolling sensitivity for mouse navigation (Out of 10)
+  mappings: {						// Mapping names are based on JS event keycodes
+    navigationUp: 'KeyA',		// To select the next module to be active
+    navigationDown: 'KeyS',		// To select the previous module to be active
+    context1: 'KeyQ',			// 1st context key. Typically used as a scroll up
+    context2: 'KeyW',			// 2nd context key. Typically used as a scroll down
+    context3: 'KeyE',			// 3rd context key. Typically used as an enter
+    context4: 'KeyR',			// 4th context key. Typically used as a go back
+  },
+  nonInteractiveModules: [ 		// Don't allow certain modules to be active/selected
+    'alert',
+    'updatenotification'
+  ]
+},
 ```
 
 ## Supporting Buttons in Modules
@@ -48,16 +48,16 @@ context3, context4). Below is a quick example that I created in the newsfeed mod
 able to scroll back and forth between stories, and open them in a new tab.
 
 ```js
-	onButtonClick: function (e) {
-		if (e === "context1") {
-			this.activeItem = Math.min(this.activeItem + 1, this.newsItems.length - 1);
-		} else if (e === "context2") {
-			this.activeItem = Math.max(this.activeItem - 1, 0);
-		} else if (e === "context3") {
-			window.open(this.newsItems[this.activeItem].url, "_blank").focus;
-		}
-		this.updateDom(100);
-	},
+onButtonClick: function (e) {
+  if (e === "context1") {
+    this.activeItem = Math.min(this.activeItem + 1, this.newsItems.length - 1);
+  } else if (e === "context2") {
+    this.activeItem = Math.max(this.activeItem - 1, 0);
+  } else if (e === "context3") {
+    window.open(this.newsItems[this.activeItem].url, "_blank").focus;
+  }
+  this.updateDom(100);
+},
 ```
 
 ## Features
